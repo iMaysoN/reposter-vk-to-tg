@@ -3,6 +3,7 @@ import os
 import sys
 import vk_api
 import telegram
+import time
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     level=logging.INFO)
@@ -24,7 +25,9 @@ tg_group_id_for_repost = '@VipTestBotGroup'
 tg_bot = telegram.Bot(tg_token)
 tg_hook = telegram
 
+# System
 last_id_filepath = os.path.join(sys.path[0], 'lastid')
+sleep_time_second = os.environ['REPOST_SLEEP_TIME_SEC'] # time between reposts
 
 
 def get_last_id():
@@ -41,12 +44,9 @@ def write_new_last_id(new_id):
 
 
 def main():
-    print(tg_bot.get_me())
     response = vk_bot.wall.get(domain=group_name, count=post_count)
-    print(response)
     response = reversed(response['items'])
     for post in response:
-        print(post)
         post_id = int(post['id'])
         last_id = get_last_id()
         if last_id >= post_id:
@@ -55,6 +55,8 @@ def main():
         owner_id = post['owner_id']
         repost_url = 'https://vk.com/{0}?w=wall{1}_{2}'.format(group_name, owner_id, post_id)
         tg_bot.send_message(chat_id=tg_group_id_for_repost, text=repost_url)
+        write_new_last_id(post_id)
+        time.sleep(sleep_time_second)
 
 
 # repost from vk to telegram
