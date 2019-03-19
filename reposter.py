@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 vk_token = os.environ['VK_TOKEN']
 vk_login = os.environ['VK_LOGIN']
 vk_pass = os.environ['VK_PASSWORD']
-group_name = 'all_rpg_news'
+group_name = 'team'
 post_count = 10
 vk_session = vk_api.VkApi(login=vk_login, password=vk_pass, token=vk_token)
 vk_session.auth(token_only=True)
@@ -21,7 +21,7 @@ vk_bot = vk_session.get_api()
 
 # TG BOT
 tg_token = os.environ['TELEGRAM_TOKEN']
-tg_group_id_for_repost = '@VipTestBotGroup'
+tg_group_id_for_repost = '@my_group'
 tg_bot = telegram.Bot(tg_token)
 tg_hook = telegram
 
